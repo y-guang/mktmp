@@ -53,8 +53,10 @@ def mktmp(name: str):
     # create the symbolic link.
     try:
         symlink_path.symlink_to(tmp_folder_path)
-        typer.echo(
-            f'Symbolic link created: \n"{symlink_path}" \npointing to: \n"{tmp_folder_path}".')
+        typer.echo("Symlink created:")
+        typer.echo(typer.style(symlink_path, fg=typer.colors.GREEN))
+        typer.echo(f"pointing to:")
+        typer.echo(typer.style(tmp_folder_path, fg=typer.colors.GREEN))
     except FileExistsError:
         typer.echo(f'Symbolic link "{symlink_path}" already exists.')
         raise typer.Exit(code=1)
