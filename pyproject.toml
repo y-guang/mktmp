@@ -23,12 +23,13 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dependencies = [
-    "python-dotenv>=1.1.1",
+    "pydantic>=2.11.7",
     "typer>=0.16.0",
 ]
 
 [project.scripts]
 mktmp = "mktmp.cli:main"
+mktmp-config = "mktmp.config_cli:main"
 
 [project.urls]
 Homepage = "https://github.com/y-guang/mktmp"

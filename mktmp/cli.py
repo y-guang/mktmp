@@ -1,9 +1,12 @@
 import typer
 from pathlib import Path
-from dotenv import load_dotenv
+import json
 import os
 import hashlib
 from datetime import datetime
+
+from config import load_and_validate_config
+from pydantic import ValidationError
 
 app = typer.Typer()
 
@@ -23,13 +26,28 @@ def mktmp(name: str):
     """
     create a temporary directory and a symbolic link to it.
     """
-    # retrieve the temporary directory.
-    tmp_dir = os.getenv('MKTMP_DIR')
-    if not tmp_dir:
-        typer.echo("MKTMP_DIR environment variable is not set.")
+    # Load configuration
+    try:
+        config = load_and_validate_config()
+        tmp_dir = Path(config.mountpoint)
+    except FileNotFoundError:
+        typer.echo("Configuration file not found. Please run 'config-cli init' first to set up configuration.")
         raise typer.Exit(code=1)
-    assert tmp_dir
-    tmp_dir = Path(tmp_dir).expanduser().resolve()
+    except ValidationError as e:
+        typer.echo(f"Configuration validation failed: {e}")
+        raise typer.Exit(code=1)
+    except Exception as e:
+        typer.echo(f"Error loading configuration: {e}")
+        raise typer.Exit(code=1)
+
+    # Ensure tmp_dir exists
+    if not tmp_dir.exists():
+        try:
+            tmp_dir.mkdir(parents=True, exist_ok=True)
+            typer.echo(f"Created mountpoint directory: {tmp_dir}")
+        except Exception as e:
+            typer.echo(f"Failed to create mountpoint directory: {e}")
+            raise typer.Exit(code=1)
 
     # build the symbolic link path.
     cwd = Path.cwd()
@@ -63,5 +81,4 @@ def mktmp(name: str):
 
 
 def main():
-    load_dotenv()
     app()
