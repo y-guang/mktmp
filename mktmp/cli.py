@@ -1,12 +1,9 @@
 import typer
 from pathlib import Path
-import json
-import os
 import hashlib
 from datetime import datetime
-
-from config import load_and_validate_config
 from pydantic import ValidationError
+from .config import load_and_validate_config
 
 app = typer.Typer()
 
@@ -31,7 +28,8 @@ def mktmp(name: str):
         config = load_and_validate_config()
         tmp_dir = Path(config.mountpoint)
     except FileNotFoundError:
-        typer.echo("Configuration file not found. Please run 'config-cli init' first to set up configuration.")
+        typer.echo(
+            "Configuration file not found. Please run 'config-cli init' first to set up configuration.")
         raise typer.Exit(code=1)
     except ValidationError as e:
         typer.echo(f"Configuration validation failed: {e}")
