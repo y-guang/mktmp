@@ -44,6 +44,22 @@ def init():
 
 
 @app.command()
+def show():
+    """Show current configuration settings."""
+    try:
+        current_config = load_and_validate_config()
+        typer.echo("Current configuration:")
+        typer.echo(
+            f"Mountpoint: {typer.style(current_config.mountpoint, fg=typer.colors.GREEN)}")
+    except FileNotFoundError:
+        typer.echo("No configuration file found. Run 'mktmp config init' to create one.", err=True)
+        raise typer.Exit(code=1)
+    except ValueError as e:
+        typer.echo(f"Configuration error: {e}", err=True)
+        raise typer.Exit(code=1)
+
+
+@app.command()
 def mountpoint(mountpoint: str):
     """Set the mountpoint and overwrite the config file."""
     # Create new config with validated mountpoint
