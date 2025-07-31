@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mktmp"
-version = "0.1.0"
+version = "0.2.0"
 description = "command-line tool for creating temporary directories along with symbolic links to them"
 readme = "README.md"
 license = "MIT"
@@ -35,3 +35,4 @@ mktmp-config = "mktmp.config_cli:main"
 Homepage = "https://github.com/y-guang/mktmp"
 Repository = "https://github.com/y-guang/mktmp"
 Issues = "https://github.com/y-guang/mktmp/issues"
+Changelog = "https://github.com/y-guang/mktmp/blob/main/CHANGELOG.md"
